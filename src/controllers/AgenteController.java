@@ -111,19 +111,19 @@ public class AgenteController {
             
             codsql.executeUpdate();
         }  catch (SQLException ex){
-            JOptionPane.showMessageDialog(null, "Erro ao atualizar");
+            throw new RuntimeException("Erro: " + ex);
         } finally {
             ConexaoDB.desconectar(con, codsql);
         }
     }
-    public void delete(Agente ag){
+    public void delete(Long cpf){
         // deletar um registro da tabela
         Connection con = ConexaoDB.conectar();
         PreparedStatement codsql = null;
         
         try {
             codsql = con.prepareStatement("DELETE FROM agente WHERE cpf = ?");
-            codsql.setLong(1, ag.getCpf());
+            codsql.setLong(1, cpf);
             
             codsql.executeUpdate();
         } catch (SQLException ex){

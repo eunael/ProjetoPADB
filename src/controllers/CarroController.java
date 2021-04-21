@@ -135,18 +135,19 @@ public class CarroController {
         return carroMultas;
     }
     
-    public void update(Carro car){
+    public void update(Carro car, String placa){
         // fazer update de um registro da tabela
         Connection con = ConexaoDB.conectar();
         PreparedStatement codsql = null;
         
         try {
-            codsql = con.prepareStatement("UPDATE carros SET cor = ?, tipo = ?, marca = ?, cpf_carro = ? WHERE placa = ?");
-            codsql.setString(1, car.getCor());
-            codsql.setString(2, car.getTipo());
-            codsql.setString(3, car.getMarca());
-            codsql.setLong(4, car.getCpf_dono());
-            codsql.setString(5, car.getPlaca());
+            codsql = con.prepareStatement("UPDATE carros SET placa = ?, cor = ?, tipo = ?, marca = ?, cpf_dono = ? WHERE placa = ?");
+            codsql.setString(1, car.getPlaca());
+            codsql.setString(2, car.getCor());
+            codsql.setString(3, car.getTipo());
+            codsql.setString(4, car.getMarca());
+            codsql.setLong(5, car.getCpf_dono());
+            codsql.setString(6, placa);
             
             codsql.executeUpdate();
         }  catch (SQLException ex){
@@ -155,14 +156,14 @@ public class CarroController {
             ConexaoDB.desconectar(con, codsql);
         }
     }
-    public void delete(Carro car){
+    public void delete(String placa){
         // deletar um registro da tabela
         Connection con = ConexaoDB.conectar();
         PreparedStatement codsql = null;
         
         try {
             codsql = con.prepareStatement("DELETE FROM carros WHERE placa = ?");
-            codsql.setString(1, car.getPlaca());
+            codsql.setString(1, placa);
             
             codsql.executeUpdate();
         } catch (SQLException ex){
