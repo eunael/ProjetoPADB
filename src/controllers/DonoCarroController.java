@@ -98,6 +98,35 @@ public class DonoCarroController {
         
         return dono;
     }
+    public List<Carro> readDonoCarros(Long cpf){
+        Connection con = ConexaoDB.conectar();
+        PreparedStatement codsql = null;
+        ResultSet rs = null;
+        
+        List<Carro> donoCarros = new ArrayList<Carro>();
+        try {
+            codsql = con.prepareStatement("SELECT * FROM carros WHERE cpf_dono = ?");
+            codsql.setLong(1, cpf);
+            rs = codsql.executeQuery();
+            
+            while(rs.next()){
+                Carro car = new Carro();
+                
+                car.setPlaca(rs.getString("placa"));
+                car.setCor(rs.getString("cor"));
+                car.setMarca(rs.getString("marca"));
+                car.setTipo(rs.getString("tipo"));
+                car.setCpf_dono(rs.getLong("cpf_dono"));
+                
+                donoCarros.add(car);
+            }
+        } catch (SQLException ex){
+            JOptionPane.showMessageDialog(null, "Erro ao consultar: "+ex);
+        } finally {
+            ConexaoDB.desconectar(con, codsql, rs);
+        }
+        return donoCarros;
+    }
     
     public void update(DonoCarro dc){
         // fazer update de um registro da tabela
@@ -117,14 +146,14 @@ public class DonoCarroController {
             ConexaoDB.desconectar(con, codsql);
         }
     }
-    public void delete(DonoCarro dc){
+    public void delete(Long cpf){
         // deletar um registro da tabela
         Connection con = ConexaoDB.conectar();
         PreparedStatement codsql = null;
         
         try {
             codsql = con.prepareStatement("DELETE FROM dono_carro WHERE cpf = ?");
-            codsql.setLong(1, dc.getCpf());
+            codsql.setLong(1, cpf);
             
             codsql.executeUpdate();
         } catch (SQLException ex){

@@ -67,7 +67,7 @@ public class AgenteController {
         return agentes;
     }
     
-    public List<Multa> readMultaAgente(Agente agn){
+    public List<Multa> readMultaAgente(Long agn){
         Connection con = ConexaoDB.conectar();
         PreparedStatement codsql = null;
         ResultSet rs = null;
@@ -76,7 +76,7 @@ public class AgenteController {
         
         try {
             codsql = con.prepareStatement("SELECT * FROM multa WHERE cpf_agente = ?");
-            codsql.setLong(1, agn.getCpf());
+            codsql.setLong(1, agn);
             rs = codsql.executeQuery();
             
             while(rs.next()){

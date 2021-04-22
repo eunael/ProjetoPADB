@@ -28,14 +28,24 @@ public class View extends javax.swing.JFrame {
      */
     public View() {
         initComponents();
-        DefaultTableModel modelo = (DefaultTableModel) jTableCarro.getModel();
-        jTableCarro.setRowSorter(new TableRowSorter(modelo));
+        /* se tiver ordenado por placa, atualizar a placa e ela trocar de ordem na tabela, fica selecionada a linha q essa placa dtava antes de atualizar
+        DefaultTableModel tableModelCarro = (DefaultTableModel) jTableCarro.getModel();
+        jTableCarro.setRowSorter(new TableRowSorter(tableModelCarro));
+        
+        DefaultTableModel tableModelAgente = (DefaultTableModel) jTableAgente.getModel();
+        jTableAgente.setRowSorter(new TableRowSorter(tableModelAgente));*/
+        
+        DefaultTableModel tableModelMulta =(DefaultTableModel) jTableMulta.getModel();
+        jTableMulta.setRowSorter(new TableRowSorter(tableModelMulta));
         
         jPanel5.setVisible(false);
         jPanel6.setVisible(false);
+        jPanel100.setVisible(false);
         btnMultaDeletar.setVisible(false);
+        jButton2.setVisible(false);
         
         readCarroTable();
+        readDonoTable();
         readAgenteTable();
         readMultaTable();
         ComboBoxDonos();
@@ -88,6 +98,25 @@ public class View extends javax.swing.JFrame {
             });
         }
     }
+    public void readDonoTable(){
+        DefaultTableModel modelo = (DefaultTableModel) jTableDono.getModel();
+        modelo.setNumRows(0);
+        
+        DonoCarroController dcDao = new DonoCarroController();
+        
+        for(DonoCarro dc: dcDao.read()){
+            int qntCarros = 0;
+            for(Carro car: dcDao.readDonoCarros(dc.getCpf())){
+                qntCarros++;
+            }
+            modelo.addRow(new Object[]{
+                dc.getCpf(),
+                dc.getNome(),
+                dc.getEndereco(),
+                qntCarros
+            });
+        }
+    }
     public void readAgenteTable(){
         DefaultTableModel modelo =  (DefaultTableModel) jTableAgente.getModel();
         modelo.setNumRows(0);
@@ -95,7 +124,7 @@ public class View extends javax.swing.JFrame {
         AgenteController agenteDao = new AgenteController();
         
         for(Agente agn: agenteDao.read()){
-            List<Multa> agenteMultas = agenteDao.readMultaAgente(agn);
+            List<Multa> agenteMultas = agenteDao.readMultaAgente(agn.getCpf());
             
             modelo.addRow(new Object[]{
                 agn.getCpf(),
@@ -157,6 +186,20 @@ public class View extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableCarro = new javax.swing.JTable();
         jLabel23 = new javax.swing.JLabel();
+        jLayeredPane7 = new javax.swing.JLayeredPane();
+        jLabel19 = new javax.swing.JLabel();
+        jPanel100 = new javax.swing.JPanel();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel29 = new javax.swing.JLabel();
+        btnAtualizaDono = new javax.swing.JButton();
+        btnDeletaDono = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
+        lblEditCpfDono = new javax.swing.JLabel();
+        textEditNomeDono = new javax.swing.JTextField();
+        textEditEnderecoDono = new javax.swing.JTextField();
+        jLabel21 = new javax.swing.JLabel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        jTableDono = new javax.swing.JTable();
         jLayeredPane2 = new javax.swing.JLayeredPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableAgente = new javax.swing.JTable();
@@ -170,7 +213,7 @@ public class View extends javax.swing.JFrame {
         btnDeletaAgente = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         lblEditCpfAgente = new javax.swing.JLabel();
-        jLabel19 = new javax.swing.JLabel();
+        jLabel32 = new javax.swing.JLabel();
         jLayeredPane4 = new javax.swing.JLayeredPane();
         jPanel7 = new javax.swing.JPanel();
         textValorMulta = new javax.swing.JTextField();
@@ -184,6 +227,7 @@ public class View extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         textDescMulta = new javax.swing.JTextArea();
         btnMultaDeletar = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jLabel27 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTableMulta = new javax.swing.JTable();
@@ -417,11 +461,138 @@ public class View extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         jTabbedPane1.addTab("Carros", jLayeredPane1);
+
+        jLabel19.setText("Selecione um agente da lista caso deseje atualizá-lo ou deletá-lo");
+
+        jLabel22.setText("CPF:");
+
+        jLabel29.setText("Endereço");
+
+        btnAtualizaDono.setText("Atualizar");
+        btnAtualizaDono.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAtualizaDonoActionPerformed(evt);
+            }
+        });
+
+        btnDeletaDono.setText("Deletar");
+        btnDeletaDono.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeletaDonoActionPerformed(evt);
+            }
+        });
+
+        jButton7.setText("X");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
+        lblEditCpfDono.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblEditCpfDono.setText(" ");
+
+        jLabel21.setText("Nome");
+
+        javax.swing.GroupLayout jPanel100Layout = new javax.swing.GroupLayout(jPanel100);
+        jPanel100.setLayout(jPanel100Layout);
+        jPanel100Layout.setHorizontalGroup(
+            jPanel100Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel100Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel100Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(textEditEnderecoDono)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel100Layout.createSequentialGroup()
+                        .addComponent(textEditNomeDono)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel22)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblEditCpfDono, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel100Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnDeletaDono)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnAtualizaDono))
+                    .addGroup(jPanel100Layout.createSequentialGroup()
+                        .addComponent(jLabel29)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel100Layout.createSequentialGroup()
+                        .addComponent(jLabel21)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton7)))
+                .addContainerGap())
+        );
+        jPanel100Layout.setVerticalGroup(
+            jPanel100Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel100Layout.createSequentialGroup()
+                .addGroup(jPanel100Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel21)
+                    .addComponent(jButton7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel100Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textEditNomeDono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel22)
+                    .addComponent(lblEditCpfDono))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel29)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(textEditEnderecoDono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel100Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAtualizaDono)
+                    .addComponent(btnDeletaDono))
+                .addGap(0, 16, Short.MAX_VALUE))
+        );
+
+        jTableDono.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "CPF", "Nome", "Endereço", "N° de carros"
+            }
+        ));
+        jTableDono.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableDonoMouseClicked(evt);
+            }
+        });
+        jScrollPane6.setViewportView(jTableDono);
+
+        jLayeredPane7.setLayer(jLabel19, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane7.setLayer(jPanel100, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane7.setLayer(jScrollPane6, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout jLayeredPane7Layout = new javax.swing.GroupLayout(jLayeredPane7);
+        jLayeredPane7.setLayout(jLayeredPane7Layout);
+        jLayeredPane7Layout.setHorizontalGroup(
+            jLayeredPane7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jLayeredPane7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel100, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jLayeredPane7Layout.createSequentialGroup()
+                        .addComponent(jLabel19)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 542, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jLayeredPane7Layout.setVerticalGroup(
+            jLayeredPane7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane7Layout.createSequentialGroup()
+                .addComponent(jLabel19)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel100, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Motoristas", jLayeredPane7);
 
         jLayeredPane2.setMaximumSize(new java.awt.Dimension(32000, 32000));
 
@@ -522,11 +693,11 @@ public class View extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel19.setText("Selecione um agente da lista caso deseje atualizá-lo ou deletá-lo");
+        jLabel32.setText("Selecione um agente da lista caso deseje atualizá-lo ou deletá-lo");
 
         jLayeredPane2.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane2.setLayer(jPanel5, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane2.setLayer(jLabel19, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(jLabel32, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPane2Layout = new javax.swing.GroupLayout(jLayeredPane2);
         jLayeredPane2.setLayout(jLayeredPane2Layout);
@@ -538,18 +709,18 @@ public class View extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 542, Short.MAX_VALUE)
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jLayeredPane2Layout.createSequentialGroup()
-                        .addComponent(jLabel19)
+                        .addComponent(jLabel32)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jLayeredPane2Layout.setVerticalGroup(
             jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jLayeredPane2Layout.createSequentialGroup()
-                .addComponent(jLabel19)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel32)
+                .addGap(1, 1, 1)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -587,6 +758,13 @@ public class View extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setText("X");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
@@ -603,17 +781,22 @@ public class View extends javax.swing.JFrame {
                                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(textValorMulta, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel24))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
                                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jComboMultaPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel25)))
                             .addComponent(jScrollPane3))
                         .addGap(60, 60, 60)
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnAplicaMulta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnMultaDeletar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnAplicaMulta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
                             .addComponent(jComboMultaAgente, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel11))))
+                            .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addComponent(jLabel11)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addComponent(btnMultaDeletar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton2)))))
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
@@ -634,7 +817,9 @@ public class View extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                        .addComponent(btnMultaDeletar)
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnMultaDeletar)
+                            .addComponent(jButton2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnAplicaMulta))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -683,7 +868,7 @@ public class View extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -936,7 +1121,7 @@ public class View extends javax.swing.JFrame {
                 .addComponent(jLabel37)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(68, Short.MAX_VALUE))
+                .addContainerGap(101, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Cadastros", jLayeredPane6);
@@ -976,6 +1161,8 @@ public class View extends javax.swing.JFrame {
         textNomeDono.setText("");
         textEnderecoDono.setText("");
         
+        readDonoTable();
+        readCarroTable();
         ComboBoxDonos();
     }//GEN-LAST:event_btnCadastroDonoActionPerformed
 
@@ -1000,6 +1187,7 @@ public class View extends javax.swing.JFrame {
         textMarcaCarro.setText("");
         
         readCarroTable();
+        readDonoTable();
         ComboBoxPlaca();
     }//GEN-LAST:event_jButton5ActionPerformed
 
@@ -1102,22 +1290,36 @@ public class View extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(jTableMulta.getSelectedRow() != -1){
             btnMultaDeletar.setVisible(true);
+            jButton2.setVisible(true);
+            
+            textValorMulta.setEnabled(false);
+            textDescMulta.setEnabled(false);
+            jComboMultaPlaca.setEnabled(false);
+            jComboMultaAgente.setEnabled(false);
+            btnAplicaMulta.setEnabled(false);
         }
     }//GEN-LAST:event_jTableMultaMouseClicked
 
     private void btnMultaDeletarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMultaDeletarActionPerformed
         // TODO add your handling code here:
         if(jTableMulta.getSelectedRow() != -1){
-            MultaController multaDao = new MultaController();
+            DonoCarroController dcDao = new DonoCarroController();
             
-            String codMulta = jTableMulta.getValueAt(jTableMulta.getSelectedRow(), 0).toString();
-            multaDao.delete(codMulta);
+            String cpfDono = jTableDono.getValueAt(jTableDono.getSelectedRow(), 0).toString();
+            dcDao.delete(Long.parseLong(cpfDono));
             
-            readCarroTable();
             readAgenteTable();
             readMultaTable();
+            readCarroTable();
             
             btnMultaDeletar.setVisible(false);
+            jButton2.setVisible(false);
+            
+            textValorMulta.setEnabled(true);
+            textDescMulta.setEnabled(true);
+            jComboMultaPlaca.setEnabled(true);
+            jComboMultaAgente.setEnabled(true);
+            btnAplicaMulta.setEnabled(true);
         }
     }//GEN-LAST:event_btnMultaDeletarActionPerformed
 
@@ -1150,6 +1352,8 @@ public class View extends javax.swing.JFrame {
             carro.setCpf_dono(dc.getCpf());
 
             carroDao.update(carro, placa);
+            
+            readDonoTable();
             readCarroTable();
             readMultaTable();
             ComboBoxPlaca();
@@ -1189,8 +1393,11 @@ public class View extends javax.swing.JFrame {
 
             jPanel6.setVisible(false);
             
+            readDonoTable();
             readCarroTable();
             readMultaTable();
+            
+            ComboBoxPlaca();
         }
     }//GEN-LAST:event_btnDeletarCarroActionPerformed
 
@@ -1206,8 +1413,83 @@ public class View extends javax.swing.JFrame {
             
             readAgenteTable();
             readMultaTable();
+            readCarroTable();
+            
+            ComboBoxAgente();
         }
     }//GEN-LAST:event_btnDeletaAgenteActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        btnMultaDeletar.setVisible(false);
+        jButton2.setVisible(false);
+        
+        textValorMulta.setEnabled(true);
+        textDescMulta.setEnabled(true);
+        jComboMultaPlaca.setEnabled(true);
+        jComboMultaAgente.setEnabled(true);
+        btnAplicaMulta.setEnabled(true);
+        
+        jTableMulta.clearSelection();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void btnAtualizaDonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtualizaDonoActionPerformed
+        // TODO add your handling code here:
+        if(jTableDono.getSelectedRow() != -1){
+            int linhaSelec = (int) jTableDono.getSelectedRow();
+            DonoCarroController dcDao = new DonoCarroController();
+            DonoCarro dono = new DonoCarro();
+            
+            dono.setCpf(Long.parseLong(lblEditCpfDono.getText()));
+            dono.setNome(textEditNomeDono.getText());
+            dono.setEndereco(textEditEnderecoDono.getText());
+            
+            dcDao.update(dono);
+            
+            readDonoTable();
+            readMultaTable();
+            ComboBoxDonos();
+            
+            jTableDono.changeSelection(linhaSelec, 0, false, false);
+        }
+    }//GEN-LAST:event_btnAtualizaDonoActionPerformed
+
+    private void btnDeletaDonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletaDonoActionPerformed
+        // TODO add your handling code here:
+        if(jTableDono.getSelectedRow() != -1){
+            DonoCarroController dcDao = new DonoCarroController();
+            Long cpf = Long.parseLong(jTableDono.getValueAt(jTableDono.getSelectedRow(), 0).toString());
+            
+            dcDao.delete(cpf);
+            
+            jPanel100.setVisible(false);
+            
+            readDonoTable();
+            readCarroTable();
+            readAgenteTable();
+            readMultaTable();
+            
+            ComboBoxDonos();
+            ComboBoxPlaca();
+        }
+    }//GEN-LAST:event_btnDeletaDonoActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        // TODO add your handling code here:
+        jPanel100.setVisible(false);
+        jTableDono.clearSelection();
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jTableDonoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableDonoMouseClicked
+        // TODO add your handling code here:
+        if(jTableDono.getSelectedRow() != -1){
+            lblEditCpfDono.setText(jTableDono.getValueAt(jTableDono.getSelectedRow(), 0).toString());
+            textEditNomeDono.setText(jTableDono.getValueAt(jTableDono.getSelectedRow(), 1).toString());
+            textEditEnderecoDono.setText(jTableDono.getValueAt(jTableDono.getSelectedRow(), 2).toString());
+            
+            jPanel100.setVisible(true);
+        }
+    }//GEN-LAST:event_jTableDonoMouseClicked
 
     /**
      * @param args the command line arguments
@@ -1248,16 +1530,20 @@ public class View extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAplicaMulta;
     private javax.swing.JButton btnAtualizaAgente;
+    private javax.swing.JButton btnAtualizaDono;
     private javax.swing.JButton btnAtualizarCarro;
     private javax.swing.JButton btnCadastroAgente;
     private javax.swing.JButton btnCadastroDono;
     private javax.swing.JButton btnDeletaAgente;
+    private javax.swing.JButton btnDeletaDono;
     private javax.swing.JButton btnDeletarCarro;
     private javax.swing.JButton btnMultaDeletar;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JComboBox<Object> jComboBox1;
     private javax.swing.JComboBox<Object> jComboEditDonoCarro;
     private javax.swing.JComboBox<Object> jComboMultaAgente;
@@ -1275,14 +1561,18 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel36;
@@ -1299,7 +1589,9 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JLayeredPane jLayeredPane4;
     private javax.swing.JLayeredPane jLayeredPane5;
     private javax.swing.JLayeredPane jLayeredPane6;
+    private javax.swing.JLayeredPane jLayeredPane7;
     private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel100;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
@@ -1309,12 +1601,15 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTableAgente;
     private javax.swing.JTable jTableCarro;
+    private javax.swing.JTable jTableDono;
     private javax.swing.JTable jTableMulta;
     private javax.swing.JLabel lblEditCpfAgente;
+    private javax.swing.JLabel lblEditCpfDono;
     private javax.swing.JLabel lblEditDivida;
     private javax.swing.JLabel lblEditMarca;
     private javax.swing.JLabel lblEditTipo;
@@ -1324,7 +1619,9 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JTextArea textDescMulta;
     private javax.swing.JTextField textEditCor;
     private javax.swing.JTextField textEditEnderecoAgente;
+    private javax.swing.JTextField textEditEnderecoDono;
     private javax.swing.JTextField textEditNomeAgente;
+    private javax.swing.JTextField textEditNomeDono;
     private javax.swing.JTextField textEditPlaca;
     private javax.swing.JTextField textEnderecoAgente;
     private javax.swing.JTextField textEnderecoDono;
