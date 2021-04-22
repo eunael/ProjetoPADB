@@ -86,7 +86,7 @@ public class CarroController {
         
         Carro car = new Carro();
         try {
-            codsql = con.prepareStatement("SELECT * FROM carros WHERE placa = ?");
+            codsql = con.prepareStatement("SELECT * FROM carros WHERE placa = ? ORDER BY placa");
             codsql.setString(1, placa);
             rs = codsql.executeQuery();
         

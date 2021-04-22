@@ -96,14 +96,14 @@ public class MultaController {
             ConexaoDB.desconectar(con, codsql);
         }
     }
-    public void delete(String mu){
+    public void delete(Long mu){
         // deletar um registro da tabela
         Connection con = ConexaoDB.conectar();
         PreparedStatement codsql = null;
         
         try {
             codsql = con.prepareStatement("DELETE FROM multa WHERE codigo = ?");
-            codsql.setLong(1, Long.parseLong(mu));
+            codsql.setLong(1, mu);
             
             codsql.executeUpdate();
         } catch (SQLException ex){

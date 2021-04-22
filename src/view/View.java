@@ -1303,10 +1303,10 @@ public class View extends javax.swing.JFrame {
     private void btnMultaDeletarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMultaDeletarActionPerformed
         // TODO add your handling code here:
         if(jTableMulta.getSelectedRow() != -1){
-            DonoCarroController dcDao = new DonoCarroController();
+            MultaController multaDao = new MultaController();
             
-            String cpfDono = jTableDono.getValueAt(jTableDono.getSelectedRow(), 0).toString();
-            dcDao.delete(Long.parseLong(cpfDono));
+            String cod = jTableMulta.getValueAt(jTableMulta.getSelectedRow(), 0).toString();
+            multaDao.delete(Long.parseLong(cod));
             
             readAgenteTable();
             readMultaTable();
@@ -1395,6 +1395,7 @@ public class View extends javax.swing.JFrame {
             
             readDonoTable();
             readCarroTable();
+            readAgenteTable();
             readMultaTable();
             
             ComboBoxPlaca();
