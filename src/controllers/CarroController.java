@@ -42,6 +42,9 @@ public class CarroController {
             codsql.executeUpdate();
         } catch (SQLException ex) {
             throw new RuntimeException("Erro no cadastro: " + ex);
+
+            //JOptionPane.showMessageDialog(null, "Cadastre um carro");
+
         } finally {
             // desconectando o banco
             ConexaoDB.desconectar(con, codsql);

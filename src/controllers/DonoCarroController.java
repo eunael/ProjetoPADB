@@ -39,7 +39,7 @@ public class DonoCarroController {
             codsql.executeUpdate();
         } catch (SQLException ex) {
             throw new RuntimeException("Erro no cadastro: " + ex);
-            //JOptionPane.showMessageDialog(null, "Erro ao salvar. "+ex);
+            //JOptionPane.showMessageDialog(null, "Cadastre um motorista");
         } finally {
             // desconectando o banco
             ConexaoDB.desconectar(con, codsql);
