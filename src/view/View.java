@@ -322,12 +322,6 @@ public class View extends javax.swing.JFrame {
 
         jTabbedPane1.setMaximumSize(new java.awt.Dimension(32000, 32767));
 
-        jLayeredPane1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLayeredPane1MouseClicked(evt);
-            }
-        });
-
         jLabel13.setText("Placa");
 
         textEditPlaca.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
