@@ -18,6 +18,21 @@ USE `projetopadb`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `dono_carro`
+--
+
+DROP TABLE IF EXISTS `dono_carro`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dono_carro` (
+  `cpf` bigint(20) NOT NULL,
+  `nome` varchar(100) NOT NULL,
+  `endereco` varchar(255) NOT NULL,
+  PRIMARY KEY (`cpf`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `agente`
 --
 
@@ -53,21 +68,6 @@ CREATE TABLE `carros` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `dono_carro`
---
-
-DROP TABLE IF EXISTS `dono_carro`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `dono_carro` (
-  `cpf` bigint(20) NOT NULL,
-  `nome` varchar(100) NOT NULL,
-  `endereco` varchar(255) NOT NULL,
-  PRIMARY KEY (`cpf`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `multa`
 --
 
@@ -79,7 +79,7 @@ CREATE TABLE `multa` (
   `valor` float NOT NULL,
   `placa_carro` varchar(7) NOT NULL,
   `cpf_agente` bigint(20) NOT NULL,
-  `descricao` text DEFAULT NULL,
+  `descricao` text NOT NULL,
   PRIMARY KEY (`codigo`),
   KEY `FK_CarrosMulta` (`placa_carro`),
   KEY `FK_AgenteMulta` (`cpf_agente`),
